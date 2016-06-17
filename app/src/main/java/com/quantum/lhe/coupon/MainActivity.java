@@ -2,7 +2,7 @@ package com.quantum.lhe.coupon;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-/*Dev Ali Hussnain*/
+/*Dev Ali Hussnaimn*/
 public class MainActivity extends AppCompatActivity {
 
     @Override
