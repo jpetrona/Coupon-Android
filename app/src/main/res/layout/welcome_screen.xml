@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="10dp"
+        android:clickable="true"
+        android:text="@string/cancel"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/bg"
+        android:layout_below="@+id/textView_cancel"
+        android:layout_above="@+id/linearLayout">
+
+        <TextView
+            android:id="@+id/textView_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="61dp"
+            android:text="@string/welcome"
+            android:textColor="@color/black"
+            android:textSize="30dp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/synce_facebook"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_below="@+id/textView_welcome"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/fb_selector_indicator"
+            android:paddingLeft="30dp"
+            android:text="@string/continue_with_facebook"
+            android:textColor="@color/white"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/synce_facebook"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="No wall posts whatsoever, Unless you ask." />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:id="@+id/linearLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/log_in"
+            android:textColor="@color/pink"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:clickable="true"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_weight="1"
+            android:id="@+id/textView_login" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/sign_up"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:clickable="true"
+            android:textColor="@color/pink"
+            android:id="@+id/textView_sign_up" />
+    </LinearLayout>
+</RelativeLayout>
