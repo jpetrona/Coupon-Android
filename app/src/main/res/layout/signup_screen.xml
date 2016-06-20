@@ -49,7 +49,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="32dp"
-                android:src="@drawable/add_photo" />
+                android:scaleType="centerCrop"
+                android:background="@drawable/add_photo" />
 
             <TextView
                 android:id="@+id/textView2"
@@ -69,7 +70,9 @@
                 android:layout_below="@+id/textView2"
                 android:layout_margin="5dp"
                 android:background="@drawable/round_edittext"
+
                 android:hint="@string/name"
+                android:inputType="textPersonName"
                 android:paddingLeft="5dp" />
 
             <EditText
@@ -107,7 +110,7 @@
                 android:layout_below="@+id/editText_pass"
                 android:layout_margin="5dp"
                 android:background="@drawable/round_edittext"
-                android:hint="Confirm"
+                android:hint="@string/confirm"
                 android:inputType="textPassword"
                 android:paddingLeft="5dp" />
 
@@ -120,8 +123,8 @@
                 android:background="@drawable/round_edittext"
                 android:clickable="true"
                 android:gravity="center_vertical"
+                android:text="@string/date_of_birth"
                 android:paddingLeft="5dp"
-                android:text="Date of Birth"
                 android:textSize="17dp" />
 
             <RadioGroup
