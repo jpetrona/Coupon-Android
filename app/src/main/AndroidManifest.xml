@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.quantum.lhe.coupon">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -32,6 +34,25 @@
         <activity
             android:name=".com.quantum.lhe.coupen.signup.SignUpActivity"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".com.quantum.lhe.coupen.views.AllCouponActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".com.quantum.lhe.coupen.views.CategoryActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".com.quantum.lhe.coupen.views.CategoryOveviewActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".com.quantum.lhe.coupen.views.CouponDetailsActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".com.quantum.lhe.coupen.views.MenuActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".com.quantum.lhe.coupen.views.SaveActivity"
+            android:screenOrientation="portrait"></activity>
+
     </application>
 
 </manifest>

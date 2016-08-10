@@ -7,7 +7,7 @@
 
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
@@ -28,13 +28,14 @@
                 android:background="@color/gray">
 
                 <TextView
+                    android:id="@+id/btnExplore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:drawablePadding="10dp"
                     android:textColor="@color/white"
-                    android:drawableTop="@drawable/discount_calculator"
+                    android:drawableTop="@drawable/menu"
                     android:text="EXPLORE" />
 
 
@@ -50,13 +51,13 @@
                 android:background="@color/gray">
 
                 <TextView
-                    android:id="@+id/imageView4"
+                    android:id="@+id/btnHome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
                     android:text="HOME"
                     android:textColor="@color/white"
-                    android:drawableTop="@drawable/discount_calculator"
+                    android:drawableTop="@drawable/home"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true" />
 
@@ -80,14 +81,15 @@
                 android:background="@color/gray">
 
                 <TextView
+                    android:id="@+id/btnProfile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
                     android:drawablePadding="10dp"
                     android:textColor="@color/white"
-                    android:drawableTop="@drawable/discount_calculator"
-                    android:text="PROFILE" />
+                    android:drawableTop="@drawable/go"
+                    android:text="PROFILE"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
 
             </RelativeLayout>
 
@@ -101,13 +103,14 @@
                 android:background="@color/gray">
 
                 <TextView
+                    android:id="@+id/btnSaved"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:drawablePadding="10dp"
                     android:textColor="@color/white"
-                    android:drawableTop="@drawable/discount_calculator"
+                    android:drawableTop="@drawable/profile_image"
                     android:text="SAVED" />
 
             </RelativeLayout>
@@ -119,13 +122,15 @@
 
 
     <ImageView
+        android:id="@+id/btnClose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="15dp"
-        android:src="@drawable/fav_un" />
+        android:src="@drawable/cross" />
 
     <TextView
+        android:id="@+id/btnFeedback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

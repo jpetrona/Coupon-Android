@@ -70,4 +70,13 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/btnMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/percent_button" />
+
 </RelativeLayout>

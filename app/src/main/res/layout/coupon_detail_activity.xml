@@ -15,6 +15,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <include layout="@layout/detail_header"/>
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
@@ -167,9 +168,15 @@
                     android:layout_marginRight="30dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="15dp"
                     android:id="@+id/layout_timings"
                     android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:text="Opening Hours:"/>
 
 
                 </LinearLayout>
@@ -206,7 +213,7 @@
                             android:layout_centerVertical="true"
                             android:layout_toLeftOf="@+id/btn_redeem"
                             android:layout_marginRight="50dp"
-                            android:src="@drawable/fav_un"/>
+                            android:src="@drawable/heart"/>
 
                         <Button
                             android:id="@+id/btn_redeem"
@@ -227,7 +234,7 @@
                             android:layout_centerVertical="true"
                             android:layout_toRightOf="@+id/btn_redeem"
                             android:layout_marginLeft="50dp"
-                            android:src="@drawable/fav_un"/>
+                            android:src="@drawable/share"/>
                     </RelativeLayout>
 
                 </RelativeLayout>

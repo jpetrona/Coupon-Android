@@ -67,6 +67,7 @@ public class Statics {
         }
         return encode_date;
     }
+
     public static Bitmap getCameraPhotoOrientation(Context context, Uri imageUri, String imagePath, Bitmap bitmap) {
         int rotate = 0;
         try {

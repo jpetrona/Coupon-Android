@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.quantum.lhe.coupon.R;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.utils.Statics;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.views.AllCouponActivity;
 
 /**
  * Created by appster on 6/17/2016.
@@ -47,7 +48,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.button_login:
                 if (checkvalidation()) {
-                    toast("Login successful");
+                    intent = new Intent(this, AllCouponActivity.class);
+                    startActivity(intent);
                 }
                 break;
             case R.id.textView_signup:
