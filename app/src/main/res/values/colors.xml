@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="app_theme_color">#FF048DB6</color>
+    <color name="app_theme_color">#048db6</color>
     <color name="green1">#56C6A0</color>
     <color name="light_blue">#FF0079A4</color>
     <color name="dark_blue">#116375</color>
@@ -35,7 +35,7 @@
     <color name="grey2">#D1D0CE</color>
     <color name="grey3">#B6B6B4</color>
     <color name="grey4">#B8B8B8</color>
-    <color name="grey5">#AAAAAA</color>
+    <color name="grey5">#aaaaaa</color>
 
 
     <color name="greylight">#E5E4E2</color>
@@ -54,8 +54,8 @@
     <color name="where_are_you_know_action_bar_color">#CC39617d</color>
 
     <color name="list_item_text">#5d5047</color>
-    <color name="colorPrimary">#FF0055</color>
-    <color name="colorPrimaryDark">#FF0079A4</color>
+    <color name="colorPrimary">#ff0055</color>
+    <color name="colorPrimaryDark">#0079a4</color>
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>

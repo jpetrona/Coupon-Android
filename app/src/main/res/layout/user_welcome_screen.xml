@@ -16,50 +16,6 @@
         android:text="@string/cancel"
         android:textStyle="bold" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@drawable/bg"
-        android:layout_below="@+id/textView_cancel"
-        android:layout_above="@+id/linearLayout">
-
-        <TextView
-            android:id="@+id/textView_welcome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="61dp"
-            android:text="@string/welcome"
-            android:textColor="@color/black"
-            android:textSize="30dp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/synce_facebook"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_below="@+id/textView_welcome"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="35dp"
-            android:layout_marginRight="35dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/fb_selector_indicator"
-            android:paddingLeft="30dp"
-            android:text="@string/continue_with_facebook"
-            android:textColor="@color/white"
-            android:textSize="15dp" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/synce_facebook"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:text="No wall posts whatsoever, Unless you ask." />
-    </RelativeLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -92,4 +48,49 @@
             android:textColor="@color/pink"
             android:id="@+id/textView_sign_up" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/bg"
+        android:layout_below="@+id/textView_cancel"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/textView_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="61dp"
+            android:text="@string/welcome"
+            android:textColor="@color/black"
+            android:textSize="30dp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/synce_facebook"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_below="@+id/textView_welcome"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/fb_selector_indicator"
+            android:paddingLeft="30dp"
+            android:text="@string/continue_with_facebook"
+            android:textColor="@color/white"
+            android:textSize="15dp" />
+
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/synce_facebook"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="No wall posts whatsoever, Unless you ask." />
+    </RelativeLayout>
 </RelativeLayout>

@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.quantum.lhe.coupon.R;
@@ -41,7 +40,7 @@ public class CategoryOveviewActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.category_overview_screen);
+        setContentView(R.layout.coupon_category_overview_screen);
         CategoryList.saveOffersNewsData(this);
         initViews();
     }

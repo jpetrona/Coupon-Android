@@ -1,40 +1,84 @@
 package com.quantum.lhe.coupon.com.quantum.lhe.coupen.views;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.quantum.lhe.coupon.R;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.adapters.ShopsExpandableAdapter;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.constants.ApiURLs;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.listener.UniversalDataListener;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.models.CouponOverviewModel;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.models.ShopsModel;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.models.StoreTimingsModel;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.networkcontrollers.VolleyNetworkController;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.utils.NetUtils;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Sharjeel on 7/12/2016.
  */
 
-public class CouponDetailsActivity extends Activity {
+public class CouponDetailsActivity extends Activity implements UniversalDataListener, View.OnClickListener {
 
-    LinearLayout linear_timing_layout;
     ImageButton back;
+    private ProgressDialog progressDialog;
+    VolleyNetworkController networkController;
+    private ExpandableListView shopExpandList;
+    ShopsExpandableAdapter shopsExpandAdapter;
+
+    ImageView ivCoupon, ivShare, ivFavorite;
+    TextView tvTitle, tvDescription, tvDiscount;
+
+    String requestType;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.coupon_detail_activity);
 
-        linear_timing_layout = (LinearLayout) findViewById(R.id.layout_timings);
+        tvTitle = (TextView) findViewById(R.id.tv_coup_heading);
+        tvDescription = (TextView) findViewById(R.id.tv_coup_detail);
+        tvDiscount = (TextView) findViewById(R.id.tv_discount);
+        ivCoupon = (ImageView) findViewById(R.id.iv_coupon);
+        ivShare = (ImageView) findViewById(R.id.iv_share);
+        ivFavorite = (ImageView) findViewById(R.id.iv_fav);
+        shopExpandList = (ExpandableListView) findViewById(R.id.exShopList);
         back = (ImageButton) findViewById(R.id.back);
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        StoreTimingsModel[] timinigs = new StoreTimingsModel[4];
+        ivFavorite.setOnClickListener(this);
+        back.setOnClickListener(this);
+        ivShare.setOnClickListener(this);
+
+        networkController = new VolleyNetworkController(this);
+        if (NetUtils.isNetworkAvailable(this)) {
+            progressDialog = ProgressDialog.show(this, "", getString(R.string.plz_wait));
+            requestType = ApiURLs.COUPON_BASE;
+            networkController.UniversalGet(ApiURLs.COUPON_BASE+"f1615d79-4390-4648-a747-28184b9d0e48", this);
+        } else {
+
+        }
+
+        //region Dummy Data
+        /*StoreTimingsModel[] timinigs = new StoreTimingsModel[4];
 
         timinigs[0] = new StoreTimingsModel();
         timinigs[0].setFromDay("Mon");
@@ -63,7 +107,7 @@ public class CouponDetailsActivity extends Activity {
 
         for (StoreTimingsModel st : timinigs
                 ) {
-            final RelativeLayout newView = (RelativeLayout) getLayoutInflater().inflate(R.layout.timing_layout, null);
+            final RelativeLayout newView = (RelativeLayout) getLayoutInflater().inflate(R.layout.coupon_timing_layout, null);
             String t1 = st.getFromDay() + "-" + st.getToDay();
             TextView tv = (TextView) newView.findViewById(R.id.tv_d);
             tv.setText(t1);
@@ -91,6 +135,121 @@ public class CouponDetailsActivity extends Activity {
                 }
                 this.linear_timing_layout.addView(newView);
             }
+        }*/
+        //endregion
+    }
+
+    String couponId;
+    @Override
+    public void onDataReceived(JSONObject jsonObject) {
+        progressDialog.dismiss();
+        if (requestType == ApiURLs.COUPON_BASE) {
+            Gson gson = new Gson();
+            CouponOverviewModel couponOverviewModel = gson.fromJson(jsonObject.toString(), CouponOverviewModel.class);
+            Log.i("CouponDetailActivity", couponOverviewModel.toString());
+            ArrayList<ShopsModel> shopsModelArrayList = new ArrayList<ShopsModel>(Arrays.asList(couponOverviewModel.getShops()));
+            shopsExpandAdapter = new ShopsExpandableAdapter(this,this,shopsModelArrayList);
+            shopExpandList.setAdapter(shopsExpandAdapter);
+            setListViewHeight(shopExpandList);
+
+            couponId = couponOverviewModel.getId();
+            tvTitle.setText(couponOverviewModel.getTitle());
+            tvDescription.setText(couponOverviewModel.getDescription());
+            shopExpandList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+
+                @Override
+                public boolean onGroupClick(ExpandableListView parent, View v,
+                                            int groupPosition, long id) {
+                    setListViewHeight(parent, groupPosition);
+                    return false;
+                }
+            });
+        }else{
+            Log.i("CouponDetailActivity", jsonObject.toString());
+        }
+    }
+
+    @Override
+    public void onDataReceived(JSONArray jsonArray) {
+
+    }
+
+    @Override
+    public void OnError(String message) {
+
+    }
+
+
+    private void setListViewHeight(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight
+                + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
+
+    private void setListViewHeight(ExpandableListView listView,
+                                   int group) {
+        ExpandableListAdapter listAdapter = (ExpandableListAdapter) listView.getExpandableListAdapter();
+        int totalHeight = 0;
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(),
+                View.MeasureSpec.EXACTLY);
+        for (int i = 0; i < listAdapter.getGroupCount(); i++) {
+            View groupItem = listAdapter.getGroupView(i, false, null, listView);
+            groupItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+
+            totalHeight += groupItem.getMeasuredHeight();
+
+            if (((listView.isGroupExpanded(i)) && (i != group))
+                    || ((!listView.isGroupExpanded(i)) && (i == group))) {
+                for (int j = 0; j < listAdapter.getChildrenCount(i); j++) {
+                    View listItem = listAdapter.getChildView(i, j, false, null,
+                            listView);
+                    listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+
+                    totalHeight += listItem.getMeasuredHeight();
+
+                }
+            }
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        int height = totalHeight
+                + (listView.getDividerHeight() * (listAdapter.getGroupCount() - 1));
+        if (height < 10)
+            height = 200;
+        params.height = height;
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back:
+                finish();
+                break;
+            case R.id.iv_share:
+
+                break;
+            case R.id.iv_fav:
+                String url = ApiURLs.BOOKMARK_COUPONS;
+                url = url.replace("{id}",couponId);
+                requestType = ApiURLs.BOOKMARK_COUPONS;
+                networkController.UniversalGet(url,this);
+                ivFavorite.setImageResource(R.drawable.heart_filled);
+
+                break;
         }
     }
 }

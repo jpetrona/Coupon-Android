@@ -3,6 +3,7 @@ package com.quantum.lhe.coupon.com.quantum.lhe.coupen.signup;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,11 +20,24 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.quantum.lhe.coupon.R;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.constants.ApiURLs;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.listener.UniversalDataListener;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.models.UserCreationModel;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.models.UserDataModel;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.networkcontrollers.VolleyNetworkController;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.utils.Statics;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.views.AllCouponActivity;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
@@ -34,16 +48,23 @@ import java.util.Locale;
 /**
  * Created by appster on 6/17/2016.
  */
-public class SignUpActivity extends Activity {
+public class SignUpActivity extends Activity implements UniversalDataListener {
     Button button_back, button_signup;
     ImageView imageView_photo;
     TextView textView_login, textView_dob;
     EditText editText_name, editText_email, editText_pass, editText_pass_c;
+    VolleyNetworkController networkController;
+    String ProfilePicBase64;
+    String[] value;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.signup_screen);
+        setContentView(R.layout.user_signup_screen);
+
+        networkController = new VolleyNetworkController(this);
+
         button_back = (Button) findViewById(R.id.button_back);
         button_signup = (Button) findViewById(R.id.button_signup);
         textView_login = (TextView) findViewById(R.id.textView_login);
@@ -53,6 +74,16 @@ public class SignUpActivity extends Activity {
         editText_pass_c = (EditText) findViewById(R.id.editText_c_pass);
         editText_email = (EditText) findViewById(R.id.editText_email);
         imageView_photo = (ImageView) findViewById(R.id.imageView_add);
+        final RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup1);
+
+        value = new String[]{((RadioButton) findViewById(rg.getCheckedRadioButtonId())).getText().toString()};
+        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                value[0] = ((RadioButton) findViewById(rg.getCheckedRadioButtonId())).getText().toString();
+            }
+        });
+
         textView_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,7 +95,28 @@ public class SignUpActivity extends Activity {
             @Override
             public void onClick(View view) {
                 if (checkvalidation()) {
-                    Toast.makeText(SignUpActivity.this, "SignUp successful", Toast.LENGTH_LONG).show();
+                    try {
+                        progressDialog = ProgressDialog.show(SignUpActivity.this,"",getString(R.string.plz_wait));
+                        UserDataModel informationModel = new UserDataModel();
+                        informationModel.setName(editText_name.getText().toString());
+                        informationModel.setEmail(editText_email.getText().toString());
+                        informationModel.setDateOfBirth(textView_dob.getText().toString());
+                        informationModel.setGender("M");
+                        informationModel.setCountryId("DK");
+
+                        UserCreationModel creationModel = new UserCreationModel();
+                        creationModel.setUserData(informationModel);
+                        creationModel.setAcceptTerms(true);
+                        creationModel.setPassword(editText_pass.getText().toString());
+                        creationModel.setConfirmPassword(editText_pass_c.getText().toString());
+//                        informationModel.setPicture(ProfilePicBase64);
+                        Gson gson = new Gson();
+                        String json = gson.toJson(creationModel);
+                        JSONObject jsonObject = new JSONObject(json);
+                        networkController.UniversalPost(jsonObject, ApiURLs.CREATE_USER, SignUpActivity.this);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -146,7 +198,7 @@ public class SignUpActivity extends Activity {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 photo.compress(Bitmap.CompressFormat.JPEG, 80, baos);
                 byte[] b = baos.toByteArray();
-                String encoded = Base64.encodeToString(b, Base64.DEFAULT);
+                ProfilePicBase64 = Base64.encodeToString(b, Base64.DEFAULT);
 
 
             }
@@ -169,7 +221,7 @@ public class SignUpActivity extends Activity {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     bitmapSelectedImage.compress(Bitmap.CompressFormat.JPEG, 80, baos);
                     byte[] b = baos.toByteArray();
-                    String encoded = Base64.encodeToString(b, Base64.DEFAULT);
+                    ProfilePicBase64 = Base64.encodeToString(b, Base64.DEFAULT);
 
 
                 } catch (Exception e) {
@@ -216,5 +268,26 @@ public class SignUpActivity extends Activity {
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         cursor.moveToFirst();
         return cursor.getString(column_index);
+    }
+
+    @Override
+    public void onDataReceived(JSONObject jsonObject) {
+
+        progressDialog.dismiss();
+        Toast.makeText(SignUpActivity.this, "SignUp successful", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(SignUpActivity.this, AllCouponActivity.class);
+        startActivity(intent);
+        Log.d("RegistrationResponse", jsonObject.toString());
+    }
+
+    @Override
+    public void onDataReceived(JSONArray jsonArray) {
+
+    }
+
+    @Override
+    public void OnError(String message) {
+        progressDialog.dismiss();
+        Toast.makeText(SignUpActivity.this, message, Toast.LENGTH_LONG).show();
     }
 }

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "783094941684",
+    "firebase_url": "https://coupon-3039f.firebaseio.com",
+    "project_id": "coupon-3039f",
+    "storage_bucket": "coupon-3039f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:783094941684:android:8afbd163249f19d6",
+        "android_client_info": {
+          "package_name": "com.quantum.lhe.coupon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "783094941684-09rhmtd6nsgo890mfqmdqagehi22qmfb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYzXax35t-3i6CcEBGdQPEsfHAk7e9vTQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

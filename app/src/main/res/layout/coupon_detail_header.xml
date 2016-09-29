@@ -29,7 +29,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:textColor="@color/black"
-        android:text="COUPON DETAIL"
+        android:text="@string/coupon_overview"
         android:textSize="20sp"
         android:textStyle="bold" />
 </RelativeLayout>

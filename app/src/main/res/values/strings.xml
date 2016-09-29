@@ -1,6 +1,9 @@
 <resources>
+
     <string name="app_name">Coupon</string>
+    <string name="facebook_app_id">1443831725640970</string>
     <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
     <string name="welcome">Welcome</string>
     <string name="sign_up">Sign up</string>
     <string name="log_in">Log in</string>
@@ -27,4 +30,17 @@
     <string name="dob_enter">Please enter your date of birth</string>
     <string name="take_photo">Take Photo</string>
     <string name="choose_gallery">Choose from Gallery</string>
+    <string name="permission_text">You need to allow permissions</string>
+    <string name="permission_deny">Permission denied! App may not work perfectly</string>
+
+    <string name="coupon_overview">Coupon Overview</string>
+
+    <!--DIALOG MESSAGES-->
+    <string name="loading">Loading</string>
+    <string name="plz_wait">Please wait</string>
+
+    <!--ERROR MESSAGES-->
+    <string name="request_error_message">Something went wrong. Please try again later</string>
+    <string name="no_internt">Internet not connected</string>
+
 </resources>

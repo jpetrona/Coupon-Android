@@ -21,7 +21,7 @@ public class ForgotPasswordActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.forgot_pass_activity);
+        setContentView(R.layout.user_forgot_pass_activity);
         editText_email = (EditText) findViewById(R.id.input_email);
         button_send = (Button) findViewById(R.id.button_send);
         button_back = (Button) findViewById(R.id.button_back);

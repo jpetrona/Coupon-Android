@@ -16,7 +16,7 @@ public class CategoryActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.all_coupon_activity);
+        setContentView(R.layout.coupon_all_activity);
 
     }
 }
