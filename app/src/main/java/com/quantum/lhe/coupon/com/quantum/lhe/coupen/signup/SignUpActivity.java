@@ -1,11 +1,13 @@
 package com.quantum.lhe.coupon.com.quantum.lhe.coupen.signup;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,6 +15,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -28,11 +32,14 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.quantum.lhe.coupon.R;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.constants.ApiURLs;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.constants.AppConstants;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.listener.UniversalDataListener;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.models.UserCreationModel;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.models.UserDataModel;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.networkcontrollers.VolleyNetworkController;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.utils.Statics;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.utils.UserInfoDialog;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.utils.Utils;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.views.AllCouponActivity;
 
 import org.json.JSONArray;
@@ -41,9 +48,13 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
+
+import static com.quantum.lhe.coupon.com.quantum.lhe.coupen.utils.Utils.getRoundedCornerBitmap;
 
 /**
  * Created by appster on 6/17/2016.
@@ -51,6 +62,7 @@ import java.util.Locale;
 public class SignUpActivity extends Activity implements UniversalDataListener {
     Button button_back, button_signup;
     ImageView imageView_photo;
+    Bitmap profile_image_bitmap = null;
     TextView textView_login, textView_dob;
     EditText editText_name, editText_email, editText_pass, editText_pass_c;
     VolleyNetworkController networkController;
@@ -163,73 +175,7 @@ public class SignUpActivity extends Activity implements UniversalDataListener {
         return false;
     }
 
-    private void selectProfileImage(String dialogTitle) {
-        final CharSequence[] options = {getResources().getString(R.string.take_photo), getResources().getString(R.string.choose_gallery), getResources().getString(R.string.cancel)};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(dialogTitle);
-        builder.setItems(options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
 
-                if (options[item].equals(getString(R.string.take_photo))) {
-                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(takePictureIntent, 0);
-                } else if (options[item].equals(getString(R.string.choose_gallery))) {
-                    Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                    photoPickerIntent.setType("image/*");
-                    startActivityForResult(photoPickerIntent, 1);
-                } else if (options[item].equals(getString(R.string.cancel))) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 0) {
-            if (resultCode == Activity.RESULT_OK) {
-                Bitmap photo = (Bitmap) data.getExtras().get("data");
-                imageView_photo.setImageBitmap(photo);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                photo.compress(Bitmap.CompressFormat.JPEG, 80, baos);
-                byte[] b = baos.toByteArray();
-                ProfilePicBase64 = Base64.encodeToString(b, Base64.DEFAULT);
-
-
-            }
-        } else if (requestCode == 1) {
-
-            Log.e("", "image from gallery ");
-            if (resultCode == Activity.RESULT_OK) {
-
-                try {
-                    Uri selectedImageUri = data.getData();
-                    String picturePath = getPath(selectedImageUri);
-
-                    Bitmap bitmapSelectedImage = Statics.getCameraPhotoOrientation(this, selectedImageUri, picturePath, BitmapFactory.decodeFile(picturePath));
-
-                    if (bitmapSelectedImage == null) {
-                        selectProfileImage("Re-Select Picture");
-                        return;
-                    }
-                    imageView_photo.setImageBitmap(bitmapSelectedImage);
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bitmapSelectedImage.compress(Bitmap.CompressFormat.JPEG, 80, baos);
-                    byte[] b = baos.toByteArray();
-                    ProfilePicBase64 = Base64.encodeToString(b, Base64.DEFAULT);
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
     private void show_date() {
         final Calendar c = Calendar.getInstance();
@@ -262,13 +208,7 @@ public class SignUpActivity extends Activity implements UniversalDataListener {
         dpd.show();
     }
 
-    public String getPath(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
+
 
     @Override
     public void onDataReceived(JSONObject jsonObject) {
@@ -290,4 +230,196 @@ public class SignUpActivity extends Activity implements UniversalDataListener {
         progressDialog.dismiss();
         Toast.makeText(SignUpActivity.this, message, Toast.LENGTH_LONG).show();
     }
+
+    private void selectProfileImage(String dialogTitle) {
+        final CharSequence[] options = {getString(R.string.take_photo_title), getString(R.string
+                .choose_from_gallery), getString(R.string.cancel_title)};
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setTitle(dialogTitle);
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+
+                if (options[item].equals(getString(R.string.take_photo_title))) {
+                    requestForCameraPermission(getString(R.string.take_photo_title));
+                } else if (options[item].equals(getString(R.string.choose_from_gallery))) {
+                    requestForCameraPermission(getString(R.string.choose_from_gallery));
+
+                } else if (options[item].equals(getString(R.string.cancel_title))) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == AppConstants.ACTION_TAKE_PHOTO_IMAGEVIEW) {
+            if (resultCode == RESULT_OK) {
+
+                try {
+
+                    rotatePicture(file,true);
+//                    saveUserProfile();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } else if (requestCode == AppConstants.ACTION_TAKE_PHOTO_FROM_GALLERY) {
+
+            if (resultCode == RESULT_OK) {
+
+                try {
+
+                    Uri selectedImageUri = data.getData();
+                    rotatePicture(selectedImageUri,false);
+//                    saveUserProfile();
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
+            }
+        }
+
+    }
+
+
+    private int REQUEST_CAMERA_PERMISSION = 100;
+    final private int REQUEST_EXTERNAL_PERMISSIONS = 124;
+    public void requestForCameraPermission(String request) {
+
+        int rCode = REQUEST_EXTERNAL_PERMISSIONS;
+
+        List<String> permissionsNeeded = new ArrayList<String>();
+
+        final List<String> permissionsList = new ArrayList<String>();
+
+        if (request.equals(getString(R.string.take_photo_title))) {
+            rCode = REQUEST_CAMERA_PERMISSION;
+            if (!addPermission(permissionsList, android.Manifest.permission.CAMERA))
+                permissionsNeeded.add("Camera");
+        } else
+            rCode = REQUEST_EXTERNAL_PERMISSIONS;
+
+        if (!addPermission(permissionsList, android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            permissionsNeeded.add("Write External Storage");
+        if (!addPermission(permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE))
+            permissionsNeeded.add("Read External Storage");
+
+
+        if (permissionsList.size() > 0) {
+            if (permissionsNeeded.size() > 0) {
+                // Need Rationale
+                String message = getString(R.string.error_permission_required) + permissionsNeeded.get(0);
+                for (int i = 1; i < permissionsNeeded.size(); i++)
+                    message = message + ", " + permissionsNeeded.get(i);
+
+                final int finalRCode = rCode;
+                UserInfoDialog.createDialog(this, message, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityCompat.requestPermissions(SignUpActivity.this,
+                                permissionsList.toArray(new String[permissionsList.size()]),
+                                finalRCode);
+                    }
+                });
+
+            }
+            ActivityCompat.requestPermissions(this,
+                    permissionsList.toArray(new String[permissionsList.size()]),
+                    rCode);
+        } else {
+
+            if (rCode == REQUEST_CAMERA_PERMISSION)
+                dispatchTakePictureIntent();
+            else
+                openGallery();
+        }
+    }
+
+    private boolean addPermission(List<String> permissionsList, String permission) {
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            permissionsList.add(permission);
+            // Check for Rationale Option
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                // Show permission rationale
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Uri file;
+    // New function for captureImageIntent
+    private void dispatchTakePictureIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        file = Uri.fromFile(Utils.getOutputMediaFile());
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, file);
+        startActivityForResult(intent, AppConstants.ACTION_TAKE_PHOTO_IMAGEVIEW);
+    }
+
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(intent, AppConstants.ACTION_TAKE_PHOTO_FROM_GALLERY);
+    }
+
+    private void rotatePicture(Uri uri, boolean isCam) {
+        try {
+            String picturePath;
+            if (!isCam)
+                picturePath = getPath(uri);
+            else
+                picturePath = uri.getPath();
+
+            int mDstHeight = imageView_photo.getMeasuredHeight();/*getResources().getDimensionPixelSize(R.dimen.createview_destination_height);*/
+            int mDstWidth = imageView_photo.getMeasuredWidth();
+            profile_image_bitmap = Utils.loadImage(picturePath,mDstWidth,mDstHeight);
+//            profile_image_bitmap = getRoundedCornerBitmap(profile_image_bitmap,100);
+            imageView_photo.setImageBitmap(profile_image_bitmap);
+/*//            Log.e("", "image from gallery path " + picturePath);
+            //SharedPreferenceManager.saveString(RegistrationProfileActivity.this, GlobelConstants.profile_image, profile_image_array);
+            Bitmap bitmapSelectedImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(),uri);
+//            Bitmap bitmapSelectedImage = BitmapFactory.decodeFile(picturePath);
+            if (bitmapSelectedImage == null) {
+                selectProfileImage(getString(R.string.reselect_picture_title));
+                return;
+            }
+            ExifInterface exif = null;
+            try {
+                exif = new ExifInterface(picturePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
+            Bitmap bmRotated = Utils.rotateBitmap(bitmapSelectedImage, orientation);
+            profile_image_bitmap = bmRotated;
+            imageView_user.setImageBitmap(bmRotated);*/
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getPath(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String index = cursor.getString(column_index);
+        cursor.close();
+        return index;
+    }
+
+    final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
+
+
 }

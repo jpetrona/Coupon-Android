@@ -7,33 +7,29 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.quantum.lhe.coupon.R;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.adapters.AllCouponAdapter;
-import com.quantum.lhe.coupon.com.quantum.lhe.coupen.adapters.RecyclerItemClickListener;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.constants.ApiURLs;
-import com.quantum.lhe.coupon.com.quantum.lhe.coupen.controllers.CouponList;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.listener.UniversalDataListener;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.models.CouponOverviewModel;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.networkcontrollers.VolleyNetworkController;
-import com.quantum.lhe.coupon.com.quantum.lhe.coupen.signup.LoginActivity;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.utils.NetUtils;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.quantum.lhe.coupon.com.quantum.lhe.coupen.constants.AppConstants.password;
-import static com.quantum.lhe.coupon.com.quantum.lhe.coupen.constants.AppConstants.username;
 
 /**
  * Created by Sharjeel on 7/12/2016.
@@ -42,9 +38,15 @@ import static com.quantum.lhe.coupon.com.quantum.lhe.coupen.constants.AppConstan
 public class AllCouponActivity extends Activity implements UniversalDataListener {
 
     private RecyclerView recyclerView;
+    private RecyclerView recyclerViewSearch;
     ImageView btnMenu;
+    SearchView searchView;
+    View centreLine;
+    RelativeLayout filter;
     private ProgressDialog progressDialog;
     ArrayList<CouponOverviewModel> couponOverviewModelArrayList = new ArrayList<>();
+    ArrayList<CouponOverviewModel> searchResults = new ArrayList<>();
+    AllCouponAdapter couponAdapter;
 
     VolleyNetworkController networkController;
 
@@ -54,7 +56,11 @@ public class AllCouponActivity extends Activity implements UniversalDataListener
         setContentView(R.layout.coupon_all_activity);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycle_view);
+        recyclerViewSearch = (RecyclerView) findViewById(R.id.recycle_viewSearch);
         btnMenu = (ImageView) findViewById(R.id.btn_menu);
+        searchView = (SearchView) findViewById(R.id.searchView);
+        centreLine = (View) findViewById(R.id.centreline);
+        filter = (RelativeLayout) findViewById(R.id.filerContainer);
 
 
         networkController = new VolleyNetworkController(this);
@@ -69,6 +75,64 @@ public class AllCouponActivity extends Activity implements UniversalDataListener
             public void onClick(View v) {
                 Intent intent = new Intent(AllCouponActivity.this, MenuActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+//                couponAdapter.getFilter().filter(newText);
+                int textLength = newText.length();
+                searchResults = new ArrayList<>();
+
+                for (int i = 0; i < couponOverviewModelArrayList.size(); i++) {
+                    //Log.e(TAG, "title = .....get");
+                    String title = couponOverviewModelArrayList.get(i).getTitle().toString();
+                    //Log.e(TAG, "title = ...."+ title);
+                    if (textLength <= title.length()) {
+
+                        if (newText.equalsIgnoreCase(title.substring(0, textLength)))
+                            searchResults.add(couponOverviewModelArrayList.get(i));
+
+                    }
+                    couponAdapter = new AllCouponAdapter(searchResults, AllCouponActivity.this, networkController);
+                    couponAdapter.notifyDataSetChanged();
+                    recyclerViewSearch.setAdapter(couponAdapter);
+                    recyclerViewSearch.setLayoutManager(new LinearLayoutManager(AllCouponActivity.this));
+
+                    recyclerViewSearch.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
+                return false;
+            }
+        });
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                if (searchResults!=null){
+                    if (searchResults.size()>0)
+                        searchResults.clear();
+                }
+                centreLine.setVisibility(View.VISIBLE);
+                filter.setVisibility(View.VISIBLE);
+                couponAdapter = new AllCouponAdapter(couponOverviewModelArrayList, AllCouponActivity.this, networkController);
+                couponAdapter.notifyDataSetChanged();
+                recyclerView.setVisibility(View.VISIBLE);
+                recyclerViewSearch.setVisibility(View.GONE);
+                return false;
+            }
+        });
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchView.setMaxWidth(Integer.MAX_VALUE);
+                centreLine.setVisibility(View.GONE);
+                filter.setVisibility(View.GONE);
             }
         });
         /*recyclerView.addOnItemTouchListener(
@@ -101,7 +165,8 @@ public class AllCouponActivity extends Activity implements UniversalDataListener
         }.getType();
         couponOverviewModelArrayList = gson.fromJson(jsonArray.toString(), listType);
         Log.i("AllCouponActivity", couponOverviewModelArrayList.toString());
-        recyclerView.setAdapter(new AllCouponAdapter(couponOverviewModelArrayList, this,networkController));
+        couponAdapter = new AllCouponAdapter(couponOverviewModelArrayList, this, networkController);
+        recyclerView.setAdapter(couponAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 

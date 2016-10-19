@@ -70,9 +70,15 @@ public class CouponDetailsActivity extends Activity implements UniversalDataList
 
         networkController = new VolleyNetworkController(this);
         if (NetUtils.isNetworkAvailable(this)) {
-            progressDialog = ProgressDialog.show(this, "", getString(R.string.plz_wait));
-            requestType = ApiURLs.COUPON_BASE;
-            networkController.UniversalGet(ApiURLs.COUPON_BASE+"f1615d79-4390-4648-a747-28184b9d0e48", this);
+            CouponOverviewModel overviewModel = (CouponOverviewModel) getIntent().getExtras().getSerializable("MyClass");
+            if (overviewModel==null){
+                progressDialog = ProgressDialog.show(this, "", getString(R.string.plz_wait));
+                requestType = ApiURLs.COUPON_BASE;
+                networkController.UniversalGet(ApiURLs.COUPON_BASE+"8a99e8d9-905d-4f7a-84fa-aa780187d289", this);
+            }else{
+                setValues(overviewModel);
+            }
+
         } else {
 
         }
@@ -146,24 +152,7 @@ public class CouponDetailsActivity extends Activity implements UniversalDataList
         if (requestType == ApiURLs.COUPON_BASE) {
             Gson gson = new Gson();
             CouponOverviewModel couponOverviewModel = gson.fromJson(jsonObject.toString(), CouponOverviewModel.class);
-            Log.i("CouponDetailActivity", couponOverviewModel.toString());
-            ArrayList<ShopsModel> shopsModelArrayList = new ArrayList<ShopsModel>(Arrays.asList(couponOverviewModel.getShops()));
-            shopsExpandAdapter = new ShopsExpandableAdapter(this,this,shopsModelArrayList);
-            shopExpandList.setAdapter(shopsExpandAdapter);
-            setListViewHeight(shopExpandList);
-
-            couponId = couponOverviewModel.getId();
-            tvTitle.setText(couponOverviewModel.getTitle());
-            tvDescription.setText(couponOverviewModel.getDescription());
-            shopExpandList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-
-                @Override
-                public boolean onGroupClick(ExpandableListView parent, View v,
-                                            int groupPosition, long id) {
-                    setListViewHeight(parent, groupPosition);
-                    return false;
-                }
-            });
+            setValues(couponOverviewModel);
         }else{
             Log.i("CouponDetailActivity", jsonObject.toString());
         }
@@ -251,5 +240,26 @@ public class CouponDetailsActivity extends Activity implements UniversalDataList
 
                 break;
         }
+    }
+
+    void setValues(CouponOverviewModel couponOverviewModel){
+        Log.i("CouponDetailActivity", couponOverviewModel.toString());
+        ArrayList<ShopsModel> shopsModelArrayList = new ArrayList<ShopsModel>(Arrays.asList(couponOverviewModel.getShops()));
+        shopsExpandAdapter = new ShopsExpandableAdapter(this,this,shopsModelArrayList);
+        shopExpandList.setAdapter(shopsExpandAdapter);
+        setListViewHeight(shopExpandList);
+
+        couponId = couponOverviewModel.getId();
+        tvTitle.setText(couponOverviewModel.getTitle());
+        tvDescription.setText(couponOverviewModel.getDescription());
+        shopExpandList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v,
+                                        int groupPosition, long id) {
+                setListViewHeight(parent, groupPosition);
+                return false;
+            }
+        });
     }
 }

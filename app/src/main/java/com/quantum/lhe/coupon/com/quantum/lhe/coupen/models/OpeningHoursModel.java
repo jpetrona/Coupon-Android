@@ -1,10 +1,12 @@
 package com.quantum.lhe.coupon.com.quantum.lhe.coupen.models;
 
+import java.io.Serializable;
+
 /**
  * Created by Sharjeel on 9/23/2016.
  */
 
-public class OpeningHoursModel {
+public class OpeningHoursModel implements Serializable {
     private ToModel to;
 
     private FromModel from;

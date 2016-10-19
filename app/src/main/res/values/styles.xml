@@ -11,4 +11,10 @@
 
     <style name="TestTheme" parent="AppTheme" />
 
+    <style name="DialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:colorAccent">@color/colorPrimary</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+    </style>
+
 </resources>

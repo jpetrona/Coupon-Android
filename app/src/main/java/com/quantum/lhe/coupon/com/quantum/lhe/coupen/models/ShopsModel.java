@@ -1,16 +1,18 @@
 package com.quantum.lhe.coupon.com.quantum.lhe.coupen.models;
 
+import java.io.Serializable;
+
 /**
  * Created by Sharjeel on 9/23/2016.
  */
 
-public class ShopsModel
+public class ShopsModel implements Serializable
 {
     private String id;
 
     private OpeningHoursModel[] openingHours;
 
-    private String address;
+    private AddressModel address;
 
     private String zipCode;
 
@@ -44,12 +46,12 @@ public class ShopsModel
         this.openingHours = openingHours;
     }
 
-    public String getAddress ()
+    public AddressModel getAddress ()
     {
         return address;
     }
 
-    public void setAddress (String address)
+    public void setAddress (AddressModel address)
     {
         this.address = address;
     }

@@ -3,6 +3,8 @@ package com.quantum.lhe.coupon.com.quantum.lhe.coupen.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ import com.quantum.lhe.coupon.com.quantum.lhe.coupen.models.CouponOverviewModel;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.networkcontrollers.VolleyNetworkController;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.views.CouponDetailsActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -75,6 +78,10 @@ public class AllCouponAdapter extends RecyclerView.Adapter<AllCouponAdapter.MyVi
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, CouponDetailsActivity.class);
+                CouponOverviewModel overviewModel = overviewModels.get(0);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("MyClass", overviewModel);
+                intent.putExtras(bundle);
                 context.startActivity(intent);
             }
         });

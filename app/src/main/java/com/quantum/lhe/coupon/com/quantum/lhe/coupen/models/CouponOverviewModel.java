@@ -1,10 +1,12 @@
 package com.quantum.lhe.coupon.com.quantum.lhe.coupen.models;
 
+import java.io.Serializable;
+
 /**
  * Created by Sharjeel on 9/23/2016.
  */
 
-public class CouponOverviewModel {
+public class CouponOverviewModel implements Serializable {
     private String state;
 
     private String forValueX;

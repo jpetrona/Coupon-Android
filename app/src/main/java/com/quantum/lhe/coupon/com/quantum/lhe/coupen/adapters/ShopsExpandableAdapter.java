@@ -2,7 +2,9 @@ package com.quantum.lhe.coupon.com.quantum.lhe.coupen.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.quantum.lhe.coupon.R;
+import com.quantum.lhe.coupon.com.quantum.lhe.coupen.models.AddressModel;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.models.CouponOverviewModel;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.models.FromModel;
 import com.quantum.lhe.coupon.com.quantum.lhe.coupen.models.GpsModel;
@@ -24,6 +27,7 @@ import com.quantum.lhe.coupon.com.quantum.lhe.coupen.utils.PreferencesHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import static com.quantum.lhe.coupon.com.quantum.lhe.coupen.constants.AppConstants.LAT;
 import static com.quantum.lhe.coupon.com.quantum.lhe.coupen.constants.AppConstants.LONG;
@@ -103,7 +107,7 @@ public class ShopsExpandableAdapter extends BaseExpandableListAdapter {
 
 
         tvShopName.setText(shopsModel.getName());
-        tvShopDistance.setText(getDist(shopsModel)+" Km");
+        tvShopDistance.setText(getDist(shopsModel) + " Km");
 
         if (isExpanded) {
             imageView_arrow.setImageResource(R.drawable.expand_arrow);
@@ -118,7 +122,7 @@ public class ShopsExpandableAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
         final ViewHolder holder;
-        ShopsModel shopsModel = listShops.get(groupPosition);
+        final ShopsModel shopsModel = listShops.get(groupPosition);
 
         LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = infalInflater.inflate(R.layout.row_expand_shop_child, parent, false);
@@ -132,9 +136,10 @@ public class ShopsExpandableAdapter extends BaseExpandableListAdapter {
         holder.tvEmail = (TextView) convertView.findViewById(R.id.tv_mail);
         holder.btnRoute = (Button) convertView.findViewById(R.id.btn_route);
 
-        holder.tvAddress.setText(shopsModel.getAddress());
-        holder.tvCity.setText(shopsModel.getZipCode() + " " + shopsModel.getCity());
-        holder.tvTel.setText("Tel. "+" +923364641254");
+        AddressModel addressModel = shopsModel.getAddress();
+        holder.tvAddress.setText(addressModel.getAddress());
+        holder.tvCity.setText(addressModel.getZipCode() + " " + addressModel.getCity());
+        holder.tvTel.setText("Tel. " + " +923364641254");
         holder.tvWebAdd.setText("www.gracias.dk");
         holder.tvEmail.setText("info@gracias.dk");
 
@@ -151,14 +156,18 @@ public class ShopsExpandableAdapter extends BaseExpandableListAdapter {
             tvDay.setText(name);
             ToModel toModel = hoursModel.getTo();
             FromModel fromModel = hoursModel.getFrom();
-            tvTime.setText(fromModel.getHours()+":00" + "-" + toModel.getHours()+":00");
+            tvTime.setText(fromModel.getHours() + ":00" + "-" + toModel.getHours() + ":00");
             holder.linear_timing_layout.addView(newView);
         }
 
+        final GpsModel gpsModel = shopsModel.getGps();
         holder.btnRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", Double.parseDouble(gpsModel.getLatitude()), Double.parseDouble(gpsModel.getLongitude()), shopsModel.getCity());
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                _context.startActivity(intent);
             }
         });
 
@@ -170,9 +179,9 @@ public class ShopsExpandableAdapter extends BaseExpandableListAdapter {
         return false;
     }
 
-    String getDist(ShopsModel shopsModel){
-        double lat = (double) PreferencesHandler.getObjectPreferences(LAT,double.class);
-        double lon = (double)PreferencesHandler.getObjectPreferences(LONG,double.class);
+    String getDist(ShopsModel shopsModel) {
+        double lat = (double) PreferencesHandler.getObjectPreferences(LAT, double.class);
+        double lon = (double) PreferencesHandler.getObjectPreferences(LONG, double.class);
         Location locationA = new Location("point A");
         Location locationB = new Location("point B");
         GpsModel gpsModel = shopsModel.getGps();

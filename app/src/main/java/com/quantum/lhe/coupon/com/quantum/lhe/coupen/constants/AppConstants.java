@@ -7,7 +7,8 @@ package com.quantum.lhe.coupon.com.quantum.lhe.coupen.constants;
 public class AppConstants {
 
     public static final String FILE_NAME_SHARED_PREF = "coupon.xml";
-
+    public static final int ACTION_TAKE_PHOTO_IMAGEVIEW = 21;
+    public static final int ACTION_TAKE_PHOTO_FROM_GALLERY = 22;
 
 
 

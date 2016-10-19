@@ -32,6 +32,16 @@
     <string name="choose_gallery">Choose from Gallery</string>
     <string name="permission_text">You need to allow permissions</string>
     <string name="permission_deny">Permission denied! App may not work perfectly</string>
+    <string name="take_photo_title">Take Photo</string>
+    <string name="choose_from_gallery">Choose from Gallery</string>
+    <string name="title_persmission_external_storage">Write External Storage</string>
+    <string name="title_persmission_read_storage">Read External Storage</string>
+    <string name="error_permission_required">You need to grant access to </string>
+    <string name="yes_title">Yes</string>
+    <string name="cancel_title">Cancel</string>
+    <string name="no_title">No</string>
+
+
 
     <string name="coupon_overview">Coupon Overview</string>
 
